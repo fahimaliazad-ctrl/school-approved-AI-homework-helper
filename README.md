@@ -1,6 +1,82 @@
 # school-approved-AI-homework-helper
 A simple setup for running Ollama on my Mac mini and letting any other device on your Wi‑Fi use it like a shared server. made as a PoC for schools that could implement it so everything just sends requests to one machine. this allows for schools to moderate AI use. The repo includes the config, example API calls, and a tiny front‑end.
 
+## Problem
+
+Schools are unsure how to handle AI in education. AI is useful for learning, but allowing every student to use public AI services isn't feasible due to restrictions on privacy and lack of oversight.
+
+## Solution
+
+This project uses a Flask server and locally-hosted AI models through Ollama to provide AI assistance over a school network.
+
+If this proof of concept were scaled up (the 3.2B model I used was due to the constraints of my hardware), students would be able to access an AI service the school runs locally. Students connect through a web interface and send requests to the server, which generates responses using local AI models.
+
+On the topic of the hardware, I am aware that there is an upfront cost associated with running capable models effectively. However, I believe this is a reasonable investment for schools to look into in exchange for the control of AI use and privacy concerns.
+
+## Why I Built This
+
+I'm on a board of student advisors to my school's superintendent and an officer at my school's AI club, so naturally the topic of AI comes up often. A major concern I heard is the abuse of AI affecting academic integrity, and this concern led to our school blocking most AI websites. I did some research, and I realized a locally-hosted server could provide AI access for an entire school while maintaining greater control over deployment.
+
+## Architecture
+
+The application uses a simple client-server architecture.
+
+User Browser  
+↓  
+Flask  
+↓  
+Ollama  
+↓  
+Local AI Model  
+
+### Request Flow
+
+1. A user submits a prompt or uploads an image through the web interface.
+2. The frontend sends the request to a Flask endpoint.
+3. Flask processes the request by:
+   - Detecting watermarks
+   - Selecting the appropriate mode
+   - Building the model prompt
+   - Preparing image data when needed
+4. Flask sends the request to Ollama through the local API.
+5. Ollama runs the selected model and returns a response.
+6. Flask returns the result to the frontend.
+
+### Image Processing
+
+For image uploads:
+
+- The frontend sends the image to Flask.
+- Flask temporarily processes and encodes the image.
+- The image is sent to Ollama's vision model.
+- The generated response is returned to the user.
+
+### Privacy
+
+All processing occurs locally.
+
+- No cloud AI services are used.
+- No conversation history is stored.
+- No prompts or images are permanently saved.
+
+Each request is processed independently and discarded after completion.
+
+## Features
+
+- Locally-hosted AI models
+- Browser-based interface
+- Vision model support
+- Multi-device access
+- Centralized deployment
+- No cloud API costs
+- School-controlled infrastructure
+
+## Results
+
+The system successfully demonstrates that a single computer can host AI models and provide responses to multiple users over a local network.
+
+The project serves as a proof-of-concept for how schools could deploy AI infrastructure while maintaining greater control over privacy, costs, and system configuration.
+
 ## First‑Time Setup Guide
 
 Follow these steps to run the program locally on your own computer.
